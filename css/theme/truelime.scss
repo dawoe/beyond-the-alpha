@@ -1,0 +1,107 @@
+/**
+ * White theme for reveal.js. This is the opposite of the 'black' theme.
+ *
+ * By Hakim El Hattab, http://hakim.se
+ */
+
+
+// Default mixins and settings -----------------
+@use 'sass:color';
+@use "template/mixins";
+
+
+@use "template/settings" with (
+// Include theme-specific fonts
+// Override theme settings (see ../template/settings.scss)
+$background-color: #fff,
+
+$main-color: rgb(39,39,9),
+$heading-color: #8bb20d,
+
+$main-font-size: 42px,
+$main-font: 'Poppins',
+$heading-font:'Poppins',
+$heading-text-shadow: none,
+$heading-letter-spacing: normal,
+$heading-text-transform: uppercase,
+$heading-font-weight: 600,
+$link-color:  rgb(227,63,24),
+$link-color-hover: rgb(227,63,24),
+$selection-background-color: color.adjust(rgb(227,63,24), $lightness: 25%),
+
+$heading1-size: 2.5em,
+$heading2-size: 1.6em,
+$heading3-size: 1.3em,
+$heading4-size: 1.0em,
+
+$overlay-element-bg-color: rgb(0, 0, 0),
+$overlay-element-fg-color: rgb(240, 240, 240),
+
+
+// @include dark-bg-text-color(#fff)
+);
+
+// Theme template ------------------------------
+@use "template/theme";
+// ---------------------------------------------
+
+// ---------------------------------------------
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("/dist/theme/fonts/poppins/poppins-light-webfont.woff") format('woff'),url("/dist/theme/fonts/poppins/poppins-light-webfont.woff2") format('woff2');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("fonts/poppins/poppins-regular-webfont.woff") format('woff'),url("fonts/poppins/poppins-regular-webfont.woff2") format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("fonts/poppins/poppins-medium-webfont.woff") format('woff'),url("fonts/poppins/poppins-medium-webfont.woff2") format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url("fonts/poppins/poppins-semibold-webfont.woff") format('woff'),url("fonts/poppins/poppins-semibold-webfont.woff2") format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+#tl-logo {
+    position: absolute;
+    bottom: 2%;
+    left: 2%;
+    z-index: 10000; 
+    // background-color: white;
+}
+
+.hide-logo {
+    display: none;
+}
+
+.full-screen-slide {    
+    color:white;
+
+    h1, h2 {
+        color:white
+    }
+}
+
+pre {
+    code {
+        font-size:1.2rem;
+        line-height: 1.3rem;
+    }
+}
