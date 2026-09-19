@@ -7,19 +7,127 @@
 			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
 		/>
 
-		<title>reveal.js</title>
+		<title>Beyond the Alpha - What I Learned Battle-Testing the New Umbraco Search</title>
 
 		<link rel="stylesheet" href="dist/reset.css" />
 		<link rel="stylesheet" href="dist/reveal.css" />
 		<link rel="stylesheet" href="dist/theme/truelime.css" />
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="dist/plugin/highlight/monokai.css" />
+		<!-- Deck specific layout helpers -->
+		<link rel="stylesheet" href="slides.css" />
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<!-- 1. Title -->
+				<section class="full-screen-slide" data-background-color="#272709">
+					<h1>Beyond the Alpha</h1>
+					<p class="subtitle">What I Learned Battle-Testing the New Umbraco Search</p>
+				</section>
+
+				<!-- 2. Intro -->
+				<section>
+					<h2>Dave Woestenborghs</h2>
+					<div class="split">
+						<ul class="text-md">
+							<li>Work at <a href="https://truelime.nl/">Truelime</a></li>
+							<li>Umbraco MVP (9x)</li>
+							<li>Working with Umbraco since 2008</li>
+							<li>Part of the 24 days in Umbraco team</li>
+						</ul>
+						<img src="img/dave.jpg" alt="Dave Woestenborghs" />
+					</div>
+				</section>
+
+				<!-- 3. Examine -->
+				<section>
+					<h2>Examine</h2>
+					<div class="split">
+						<p class="text-sm">
+							Examine is a provider based Indexer/Searcher API and wraps the Lucene.Net
+							indexing/searching engine. Examine is not exclusive to Umbraco and can actually be
+							used as a completely stand alone component on any project that needs a fast index
+							and search.
+						</p>
+						<img class="portrait" src="img/shannon.jpg" alt="Shannon Deminick" />
+					</div>
+				</section>
+
+				<!-- 4. Umbraco Examine -->
+				<section>
+					<h2>Umbraco Examine</h2>
+					<p class="text-sm">
+						Umbraco Examine is the Umbraco implementation of Examine. Umbraco Examine is a
+						combination of Umbraco, Examine and Lucene.Net and uses Umbraco as the data source for
+						its Lucene index.
+					</p>
+				</section>
+
+				<!-- 5. Umbraco Examine - usage -->
+				<section>
+					<h2>Umbraco Examine</h2>
+					<p class="text-md">Examine is used for</p>
+					<ul class="text-md">
+						<li>Backoffice search</li>
+						<li>Delivery API</li>
+						<li>Search queries on the website</li>
+					</ul>
+				</section>
+
+				<!-- 6. Tightly coupled -->
+				<section>
+					<h2>Tightly coupled</h2>
+					<div class="stage">
+						<img
+							src="img/tightly-coupled.jpeg"
+							alt="Umbraco, Examine and Lucene.Net tightly coupled together"
+						/>
+					</div>
+				</section>
+
+				<!-- 7. Codegarden 2025 -->
+				<section>
+					<h2>Codegarden 2025</h2>
+					<div class="split">
+						<p class="text-sm">
+							I attended the talk <em>"The future of (Umbraco) search"</em> by Kenn Jacobson,
+							where he introduced the Umbraco Search Abstractions.
+						</p>
+						<img class="portrait" src="img/kenn.png" alt="Kenn Jacobson" />
+					</div>
+				</section>
+
+				<!-- 8. Umbraco Search -->
+				<section>
+					<h2>Umbraco Search</h2>
+					<p class="text-sm">
+						Umbraco Search introduces a new, <strong>provider-based</strong> search architecture.
+					</p>
+					<p class="text-sm">
+						It gives developers one consistent way to express advanced search: full-text querying,
+						filtering, faceting, sorting, language and segment support, results that respect
+						protected-content access, and indexing of Umbraco's property editors, and, because
+						it's provider-based, the freedom to plug in the search engine of your choice.
+					</p>
+				</section>
+
+				<!-- 9. Examine stays the default -->
+				<section>
+					<h2>Umbraco Search</h2>
+					<p class="text-md">
+						Examine will remain the default search provider out of the box with Umbraco.
+					</p>
+				</section>
+
+				<!-- 10. Availability -->
+				<section>
+					<h2>Umbraco Search</h2>
+					<p class="text-md">
+						For Umbraco 17 and 18 it is available as a package. From version 19 it will replace
+						the current Examine implementation in the CMS.
+					</p>
+				</section>
 			</div>
 		</div>
 
@@ -48,16 +156,23 @@
 			transition: 'convex'
 			});
 
-			Reveal.on('slidechanged', function (event) {
-			var logo = document.querySelector('#tl-logo');
+			function syncLogo(slide) {
+				var logo = document.querySelector('#tl-logo');
 
-			if (event.currentSlide.classList.contains('full-screen-slide')) {
-				logo.classList.add('hide-logo');
+				if (slide.classList.contains('full-screen-slide')) {
+					logo.classList.add('hide-logo');
+				} else {
+					logo.classList.remove('hide-logo');
+				}
 			}
-			else {
-				logo.classList.remove('hide-logo');
-			}
-		});
+
+			Reveal.on('ready', function (event) {
+				syncLogo(event.currentSlide);
+			});
+
+			Reveal.on('slidechanged', function (event) {
+				syncLogo(event.currentSlide);
+			});
 		</script>
 	</body>
 </html>

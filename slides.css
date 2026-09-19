@@ -1,0 +1,82 @@
+/* Layout helpers for the "Beyond the Alpha" deck. */
+
+.reveal .slides section {
+	text-align: left;
+}
+
+.reveal .slides section.center-slide,
+.reveal .slides section.full-screen-slide {
+	text-align: center;
+}
+
+/* Text scales ------------------------------------------------ */
+
+.reveal .text-md {
+	font-size: 0.7em;
+	line-height: 1.4;
+}
+
+.reveal .text-sm {
+	font-size: 0.55em;
+	line-height: 1.5;
+}
+
+.reveal .subtitle {
+	font-size: 0.6em;
+	font-weight: 300;
+	margin-top: 0;
+}
+
+/* Two column split ------------------------------------------- */
+
+.reveal .split {
+	display: grid;
+	grid-template-columns: 1.6fr 1fr;
+	gap: 60px;
+	align-items: center;
+}
+
+.reveal .split ul {
+	display: block;
+	margin-left: 1em;
+}
+
+.reveal .split img {
+	display: block;
+	width: 100%;
+	max-height: 460px;
+	object-fit: cover;
+	margin: 0;
+	border: none;
+	border-radius: 12px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.reveal .split img.portrait {
+	width: 300px;
+	height: 300px;
+	border-radius: 50%;
+	margin-left: auto;
+}
+
+/* Single large image ----------------------------------------- */
+
+.reveal .stage img {
+	display: block;
+	max-height: 480px;
+	width: auto;
+	margin: 0 auto;
+	border: none;
+	border-radius: 12px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Full screen slides ----------------------------------------- */
+
+.reveal .full-screen-slide .subtitle {
+	color: #fff;
+}
+
+.reveal .full-screen-slide a {
+	color: #8bb20d;
+}
