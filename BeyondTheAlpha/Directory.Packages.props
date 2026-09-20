@@ -12,7 +12,6 @@
   <ItemGroup>
     <PackageVersion Include="Clean" Version="8.0.1" />
     <PackageVersion Include="Umbraco.Cms" Version="18.2.0" />
-    <PackageVersion Include="Umbraco.Cms.DevelopmentMode.Backoffice" Version="18.2.0" />
     <PackageVersion Include="Microsoft.ICU.ICU4C.Runtime" Version="$(UmbracoAppLocalIcuVersion)" />
   </ItemGroup>
 </Project>

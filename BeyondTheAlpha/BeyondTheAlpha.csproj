@@ -9,7 +9,6 @@
   <ItemGroup>
     <PackageReference Include="Clean" />
     <PackageReference Include="Umbraco.Cms" />
-    <PackageReference Include="Umbraco.Cms.DevelopmentMode.Backoffice" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -47,8 +46,8 @@
 
   <PropertyGroup>
     <!-- Remove RazorCompileOnBuild and RazorCompileOnPublish when not using ModelsMode InMemoryAuto -->
-    <RazorCompileOnBuild>false</RazorCompileOnBuild>
-    <RazorCompileOnPublish>false</RazorCompileOnPublish>
+    <RazorCompileOnBuild>true</RazorCompileOnBuild>
+    <RazorCompileOnPublish>true</RazorCompileOnPublish>
   </PropertyGroup>
 
 </Project>
