@@ -13,6 +13,10 @@
     <PackageVersion Include="Clean" Version="8.0.1" />
     <PackageVersion Include="Umbraco.Cms" Version="18.2.0" />
     <PackageVersion Include="Microsoft.ICU.ICU4C.Runtime" Version="$(UmbracoAppLocalIcuVersion)" />
+    <PackageVersion Include="Umbraco.Cms.Search.BackOffice" Version="18.2.0" />
+    <PackageVersion Include="Umbraco.Cms.Search.Core" Version="18.2.0" />
+    <PackageVersion Include="Umbraco.Cms.Search.DeliveryApi" Version="18.2.0" />
+    <PackageVersion Include="Umbraco.Cms.Search.Provider.Examine" Version="18.2.0" />
     <PackageVersion Include="uSync" Version="18.1.4" />
   </ItemGroup>
 </Project>
