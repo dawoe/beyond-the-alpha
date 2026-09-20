@@ -71,6 +71,73 @@
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
+/* Diagrams --------------------------------------------------- */
+
+.reveal .diagram svg {
+	display: block;
+	width: 100%;
+	max-height: 480px;
+	margin: 0 auto;
+}
+
+.reveal .diagram .node rect,
+.reveal .diagram .node ellipse,
+.reveal .diagram .node path {
+	stroke-width: 2;
+}
+
+.reveal .diagram .node text {
+	font-family: var(--r-main-font);
+	font-size: 22px;
+	font-weight: 500;
+	text-anchor: middle;
+}
+
+.reveal .diagram .node text.sub {
+	font-size: 17px;
+	font-weight: 400;
+	opacity: 0.75;
+}
+
+.reveal .diagram .trigger rect {
+	fill: #f2f7e2;
+	stroke: #8bb20d;
+}
+
+.reveal .diagram .action rect {
+	fill: #fdeee9;
+	stroke: #e33f18;
+}
+
+.reveal .diagram .store path,
+.reveal .diagram .store ellipse {
+	fill: #272709;
+	stroke: #272709;
+}
+
+.reveal .diagram .store ellipse {
+	fill: #3d3d17;
+}
+
+.reveal .diagram .store text {
+	fill: #fff;
+}
+
+.reveal .diagram .link {
+	fill: none;
+	stroke: #8a8a6a;
+	stroke-width: 2.5;
+}
+
+.reveal .diagram .link.arrowed {
+	marker-end: url(#arrow);
+}
+
+.reveal .diagram marker path {
+	fill: #8a8a6a;
+	stroke: none;
+}
+
 /* Full screen slides ----------------------------------------- */
 
 .reveal .full-screen-slide .subtitle {

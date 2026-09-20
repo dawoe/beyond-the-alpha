@@ -20,19 +20,19 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<!-- 1. Title -->
-				<section class="full-screen-slide" data-background-color="#272709">
+				<!-- Title -->
+				<section class="full-screen-slide" data-background-color="rgb(136,0,78)">
 					<h1>Beyond the Alpha</h1>
 					<p class="subtitle">What I Learned Battle-Testing the New Umbraco Search</p>
 				</section>
 
-				<!-- 2. Intro -->
+				<!-- Intro -->
 				<section>
 					<h2>Dave Woestenborghs</h2>
 					<div class="split">
 						<ul class="text-md">
 							<li>Work at <a href="https://truelime.nl/">Truelime</a></li>
-							<li>Umbraco MVP (9x)</li>
+							<li>Umbraco MVP (11x)</li>
 							<li>Working with Umbraco since 2008</li>
 							<li>Part of the 24 days in Umbraco team</li>
 						</ul>
@@ -40,7 +40,12 @@
 					</div>
 				</section>
 
-				<!-- 3. Examine -->
+				<!-- Section divider: Examine -->
+				<section class="full-screen-slide" data-background-color="#e33f00">
+					<h1>Examine</h1>
+				</section>
+
+				<!-- Examine -->
 				<section>
 					<h2>Examine</h2>
 					<div class="split">
@@ -54,7 +59,7 @@
 					</div>
 				</section>
 
-				<!-- 4. Umbraco Examine -->
+				<!-- Umbraco Examine -->
 				<section>
 					<h2>Umbraco Examine</h2>
 					<p class="text-sm">
@@ -64,7 +69,7 @@
 					</p>
 				</section>
 
-				<!-- 5. Umbraco Examine - usage -->
+				<!-- Umbraco Examine - usage -->
 				<section>
 					<h2>Umbraco Examine</h2>
 					<p class="text-md">Examine is used for</p>
@@ -75,7 +80,7 @@
 					</ul>
 				</section>
 
-				<!-- 6. Tightly coupled -->
+				<!-- Tightly coupled -->
 				<section>
 					<h2>Tightly coupled</h2>
 					<div class="stage">
@@ -86,7 +91,87 @@
 					</div>
 				</section>
 
-				<!-- 7. Codegarden 2025 -->
+				<!-- How Umbraco Examine keeps its index in sync -->
+				<section>
+					<h2>Examine</h2>
+					<div class="diagram">
+						<svg viewBox="0 0 1080 400" role="img" aria-labelledby="indexing-flow-desc">
+							<title id="indexing-flow-desc">
+								How Umbraco Examine builds and maintains its Lucene index. A startup with no
+								existing index and a manual rebuild both crawl all content and build the full
+								index. A save or publish in the CMS updates only that one node.
+							</title>
+
+							<defs>
+								<marker
+									id="arrow"
+									viewBox="0 0 10 10"
+									refX="9"
+									refY="5"
+									markerWidth="7"
+									markerHeight="7"
+									orient="auto-start-reverse"
+								>
+									<path d="M 0 0 L 10 5 L 0 10 z" />
+								</marker>
+							</defs>
+
+							<!-- Triggers -->
+							<g class="node trigger">
+								<rect x="0" y="16" width="250" height="76" rx="10" />
+								<text x="125" y="48">Startup</text>
+								<text x="125" y="76" class="sub">no index yet</text>
+							</g>
+							<g class="node trigger">
+								<rect x="0" y="116" width="250" height="76" rx="10" />
+								<text x="125" y="148">Rebuild</text>
+								<text x="125" y="176" class="sub">from the backoffice</text>
+							</g>
+							<g class="node trigger">
+								<rect x="0" y="286" width="250" height="76" rx="10" />
+								<text x="125" y="318">Save / Publish</text>
+								<text x="125" y="346" class="sub">one node</text>
+							</g>
+
+							<!-- Triggers to actions -->
+							<path class="link" d="M 250 54 H 320 V 104" />
+							<path class="link" d="M 250 154 H 320 V 104" />
+							<path class="link arrowed" d="M 320 104 H 372" />
+							<path class="link arrowed" d="M 250 324 H 372" />
+
+							<!-- Actions -->
+							<g class="node action">
+								<rect x="380" y="66" width="270" height="76" rx="10" />
+								<text x="515" y="98">Crawl all content</text>
+								<text x="515" y="126" class="sub">build the full index</text>
+							</g>
+							<g class="node action">
+								<rect x="380" y="286" width="270" height="76" rx="10" />
+								<text x="515" y="318">Update that node</text>
+								<text x="515" y="346" class="sub">rest stays untouched</text>
+							</g>
+
+							<!-- Actions to index -->
+							<path class="link arrowed" d="M 650 104 H 720 V 170 H 782" />
+							<path class="link arrowed" d="M 650 324 H 720 V 240 H 782" />
+
+							<!-- Lucene index -->
+							<g class="node store">
+								<path d="M 790 138 v 134 a 115 24 0 0 0 230 0 v -134 z" />
+								<ellipse cx="905" cy="138" rx="115" ry="24" />
+								<text x="905" y="200">Lucene index</text>
+								<text x="905" y="228" class="sub">on disk</text>
+							</g>
+						</svg>
+					</div>
+				</section>
+
+				<!-- Section divider: Umbraco Search -->
+				<section class="full-screen-slide" data-background-color="#db0967">
+					<h1>Umbraco Search</h1>
+				</section>
+
+				<!-- Codegarden 2025 -->
 				<section>
 					<h2>Codegarden 2025</h2>
 					<div class="split">
@@ -98,7 +183,7 @@
 					</div>
 				</section>
 
-				<!-- 8. Umbraco Search -->
+				<!-- Umbraco Search -->
 				<section>
 					<h2>Umbraco Search</h2>
 					<p class="text-sm">
@@ -112,7 +197,7 @@
 					</p>
 				</section>
 
-				<!-- 9. Examine stays the default -->
+				<!-- Examine stays the default -->
 				<section>
 					<h2>Umbraco Search</h2>
 					<p class="text-md">
@@ -120,7 +205,7 @@
 					</p>
 				</section>
 
-				<!-- 10. Availability -->
+				<!-- Availability -->
 				<section>
 					<h2>Umbraco Search</h2>
 					<p class="text-md">
