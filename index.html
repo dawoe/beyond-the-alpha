@@ -197,6 +197,17 @@
 					</p>
 				</section>
 
+				<!-- Search abstractions -->
+				<section>
+					<h2>Umbraco Search</h2>
+					<div class="stage">
+						<img
+							src="img/abstractions.jpeg"
+							alt="Umbraco and Examine joined by an Abstractions layer in between"
+						/>
+					</div>
+				</section>
+
 				<!-- Examine stays the default -->
 				<section>
 					<h2>Umbraco Search</h2>
@@ -212,6 +223,170 @@
 						For Umbraco 17 and 18 it is available as a package. From version 19 it will replace
 						the current Examine implementation in the CMS.
 					</p>
+				</section>
+
+				<!-- Section divider: Setup -->
+				<section class="full-screen-slide" data-background-color="#8bb20d">
+					<h1>Setup</h1>
+				</section>
+
+				<!-- Installation -->
+				<section>
+					<h2>Installation</h2>
+					<p class="text-sm">Multiple NuGet packages cover different aspects of search:</p>
+					<ul class="text-sm">
+						<li>
+							<a href="https://nuget.org/packages/Umbraco.Cms.Search.Core"
+								><code>Umbraco.Cms.Search.Core</code></a
+							>
+							contains the core functionality.
+						</li>
+						<li>
+							<a href="https://nuget.org/packages/Umbraco.Cms.Search.BackOffice"
+								><code>Umbraco.Cms.Search.BackOffice</code></a
+							>
+							allows Umbraco Search to power the backoffice content search.
+						</li>
+						<li>
+							<a href="https://nuget.org/packages/Umbraco.Cms.Search.DeliveryApi"
+								><code>Umbraco.Cms.Search.DeliveryApi</code></a
+							>
+							allows Umbraco Search to power the Content Delivery API.
+						</li>
+						<li>
+							<a href="https://www.nuget.org/packages/Umbraco.Cms.Search.Provider.Examine"
+								><code>Umbraco.Cms.Search.Provider.Examine</code></a
+							>
+							is the default search provider implementation.
+						</li>
+					</ul>
+				</section>
+
+				<!-- Activation -->
+				<section>
+					<h2>Activation</h2>
+					<pre><code class="language-csharp" data-trim data-noescape>
+internal sealed class SiteComposer : IComposer
+{
+    public void Compose(IUmbracoBuilder builder)
+    {
+        builder
+            .AddSearchCore()
+            .AddBackOfficeSearch()
+            .AddDeliveryApiSearch()
+            .AddExamineSearchProvider();
+    }
+}
+					</code></pre>
+				</section>
+
+				<!-- Index naming -->
+				<section>
+					<h2>Index naming</h2>
+					<table class="text-sm">
+						<thead>
+							<tr>
+								<th>Examine</th>
+								<th>Umbraco Search</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>ExternalIndex</td>
+								<td>Umb_PublishedContent</td>
+							</tr>
+							<tr>
+								<td>InternalIndex</td>
+								<td>Umb_Content</td>
+							</tr>
+							<tr>
+								<td>MembersIndex</td>
+								<td>Umb_Members</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>Umb_Media</td>
+							</tr>
+							<tr>
+								<td>DeliveryApiContentIndex</td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<!-- Optimizing server resources -->
+				<section>
+					<h2>Optimizing server resources</h2>
+					<p class="text-sm">
+						Umbraco keeps the default indexes up to date with content changes. Since we are no
+						longer using them we can disable them.
+					</p>
+					<pre><code class="language-csharp" data-trim data-noescape>
+public void Compose(IUmbracoBuilder builder)
+{
+    builder.DisableDefaultExamineIndexes();
+}
+					</code></pre>
+				</section>
+
+				<!-- Zero downtime indexing -->
+				<section>
+					<h2>Zero down time indexing</h2>
+					<pre><code class="language-json" data-trim data-noescape>
+"Umbraco": {
+  "CMS": {
+    "Search": {
+      "Examine": {
+        "ZeroDowntimeIndexing": true
+      }
+    }
+  }
+}
+					</code></pre>
+				</section>
+
+				<!-- Section divider: Searching -->
+				<section class="full-screen-slide" data-background-color="#e33f00">
+					<h1>Searching</h1>
+				</section>
+
+				<!-- Simple search -->
+				<section>
+					<h2>Simple search</h2>
+					<pre class="code-sm"><code
+							class="language-csharp"
+							data-trim
+							data-line-numbers="3|11|13-25"
+						><script type="text/template">
+@using Umbraco.Cms.Search.Core
+@inherits UmbracoViewPage
+@inject Umbraco.Cms.Search.Core.Services.ISearcher Searcher
+
+@{
+    var searchQuery = Context.Request.Query["q"];
+}
+
+@if (string.IsNullOrWhiteSpace(searchQuery) == false)
+{
+    var result = await Searcher.SearchAsync(Constants.IndexAliases.PublishedContent, query: searchQuery);
+
+    if (result.Total > 0)
+    {
+        var contentItems = new List<IPublishedContent>();
+        @foreach (var searchDoc in result.Documents)
+        {
+            var contentItem = await UmbracoContext?.Content.GetByIdAsync(searchDoc.Id);
+
+            if (contentItem is not null)
+            {
+                contentItems.Add(contentItem);
+            }
+        }
+    }
+
+}
+						</script></code></pre>
 				</section>
 			</div>
 		</div>

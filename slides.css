@@ -71,6 +71,56 @@
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
+/* Tables ----------------------------------------------------- */
+
+.reveal table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.reveal table th,
+.reveal table td {
+	padding: 0.35em 0.6em;
+	border-bottom: 1px solid #d9d9c8;
+	text-align: left;
+}
+
+.reveal table th {
+	color: var(--r-heading-color);
+	font-weight: 600;
+	border-bottom-width: 2px;
+}
+
+.reveal table td:empty::after {
+	content: '—';
+	opacity: 0.35;
+}
+
+/* Code ------------------------------------------------------- */
+
+.reveal pre {
+	width: 100%;
+	box-shadow: none;
+	margin: 20px 0 0;
+}
+
+.reveal pre.code-sm {
+	max-height: 520px;
+}
+
+.reveal pre.code-sm code {
+	font-size: 0.85rem;
+	line-height: 1.05rem;
+	max-height: none;
+}
+
+.reveal li code {
+	font-size: 0.85em;
+	background: #f3f3ea;
+	padding: 0.05em 0.3em;
+	border-radius: 4px;
+}
+
 /* Diagrams --------------------------------------------------- */
 
 .reveal .diagram svg {
