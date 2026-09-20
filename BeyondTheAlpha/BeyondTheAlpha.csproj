@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Clean" />
     <PackageReference Include="Umbraco.Cms" />
+    <PackageReference Include="uSync" />
   </ItemGroup>
 
   <PropertyGroup>
