@@ -351,9 +351,9 @@ public void Compose(IUmbracoBuilder builder)
 					<h1>Searching</h1>
 				</section>
 
-				<!-- Simple search -->
+				<!-- Search by query (full text) -->
 				<section>
-					<h2>Simple search</h2>
+					<h2>Search by query</h2>
 					<pre class="code-sm"><code
 							class="language-csharp"
 							data-trim
@@ -387,6 +387,433 @@ public void Compose(IUmbracoBuilder builder)
 
 }
 						</script></code></pre>
+				</section>
+
+				<!-- Filtering -->
+				<section>
+					<h2>Filtering</h2>
+					<p class="text-sm">
+						Multiple filters can be applied in a single query, and multiple values can be defined
+						for each filter. Umbraco Search performs an <code>AND</code> search between filters,
+						and an <code>OR</code> search between filter values.
+					</p>
+					<p class="text-sm">
+						Filters can be negated, in which case Umbraco Search will perform an
+						<code>AND NOT</code>.
+					</p>
+				</section>
+
+				<!-- Filtering - code -->
+				<section>
+					<h2>Filtering</h2>
+					<pre class="code-sm"><code class="language-csharp" data-trim><script type="text/template">
+public class MySearchService(ISearcher searcher)
+{
+    public async Task<SearchResult> FilterByKeywordAndIntegerAsync()
+        => await searcher.SearchAsync(
+            indexAlias: Constants.IndexAliases.PublishedContent,
+            // "genre" must be either "rock" or "pop",
+            // AND "releaseYear" must NOT be either 1984, 1985 or 1986
+            filters:
+            [
+                new KeywordFilter(
+                    FieldName: "genre",
+                    Values: ["rock", "pop"],
+                    Negate: false
+                ),
+                new IntegerExactFilter(
+                    FieldName: "releaseYear",
+                    Values: [1984, 1985, 1986],
+                    Negate: true
+                )
+            ]
+        );
+}
+						</script></code></pre>
+				</section>
+
+				<!-- Range filtering -->
+				<section>
+					<h2>Range filtering</h2>
+					<p class="text-sm">Numeric and date filters also exist in a range version.</p>
+					<pre class="code-xs"><code class="language-csharp" data-trim><script type="text/template">
+// "genre" must be either "rock" or "pop",
+// AND "releaseYear" must either be in the range [1950,1960)
+// OR [1980,1990)
+filters:
+[
+    new KeywordFilter(
+        FieldName: "genre",
+        Values: ["rock", "pop"],
+        Negate: false
+    ),
+    new IntegerRangeFilter(
+        FieldName: "releaseYear",
+        Ranges:
+        [
+            new(
+                MinValue: 1950,
+                MaxValue: 1960
+            ),
+            new(
+                MinValue: 1980,
+                MaxValue: 1990
+            )
+        ],
+        Negate: false
+    )
+]
+						</script></code></pre>
+				</section>
+
+				<!-- Filtering - value types -->
+				<section>
+					<h2>Filtering</h2>
+					<p class="text-sm">
+						A filter must match the index value type of the field, otherwise an exception will be
+						raised or the search will yield no results.
+					</p>
+					<p class="text-sm">
+						A full list for built-in property editors can be found in the
+						<a
+							href="https://docs.umbraco.com/umbraco-search/getting-started/getting-started/built-in-property-editors"
+							>documentation</a
+						>.
+					</p>
+				</section>
+
+				<!-- Sorting - configuration -->
+				<section>
+					<h2>Sorting</h2>
+					<p class="text-sm">You will have to configure the field to be sortable.</p>
+					<pre class="code-sm"><code class="language-csharp" data-trim><script type="text/template">
+internal sealed class SiteComposer : IComposer
+{
+    public void Compose(IUmbracoBuilder builder)
+    {
+        builder.Services.Configure<FieldOptions>(options =>
+            options.Fields =
+            [
+                new FieldOptions.Field
+                {
+                    PropertyName = "articleDate",
+                    FieldValues = FieldValues.DateTimeOffsets,
+                    Facetable = false,
+                    Sortable = true,
+                }
+            ]);
+    }
+}
+						</script></code></pre>
+				</section>
+
+				<!-- Sorting - rebuild reminder -->
+				<section>
+					<h2>Sorting</h2>
+					<p class="text-sm">
+						It's important that whenever you make changes to field configuration you rebuild the
+						index so the changes take effect.
+					</p>
+					<p class="text-sm">
+						This can be done from the new Search UI in the backoffice Settings section.
+					</p>
+				</section>
+
+				<!-- Sorting - query -->
+				<section>
+					<h2>Sorting</h2>
+					<pre class="code-sm"><code class="language-csharp" data-trim><script type="text/template">
+var filter =
+    new KeywordFilter(
+        Constants.FieldNames.ContentTypeId,
+        new string[] { contentType.Key.ToString() },
+        false);
+
+var sorter =
+    new DateTimeOffsetSorter("articleDate", Direction.Descending);
+
+var result = await searcher.SearchAsync(
+    Constants.IndexAliases.PublishedContent,
+    filters: new[] { filter },
+    sorters: new[] { sorter },
+    take: pageSize,
+    skip: (pageNumber - 1) * pageSize);
+						</script></code></pre>
+				</section>
+
+				<!-- Facets - configuration -->
+				<section>
+					<h2>Facets</h2>
+					<p class="text-sm">Configure a field to be facetable.</p>
+					<pre class="code-sm"><code class="language-csharp" data-trim><script type="text/template">
+builder.Services.Configure<FieldOptions>(options =>
+    options.Fields =
+    [
+        new FieldOptions.Field
+        {
+            PropertyName = "author",
+            FieldValues = FieldValues.Keywords,
+            Facetable = true,
+            Sortable = false,
+        }
+    ]);
+						</script></code></pre>
+				</section>
+
+				<!-- Facets - query -->
+				<section>
+					<h2>Facets</h2>
+					<p class="text-sm">Pass facets to search.</p>
+					<pre class="code-sm"><code class="language-csharp" data-trim><script type="text/template">
+var result = await searcher.SearchAsync(
+    Constants.IndexAliases.PublishedContent,
+    filters: filters,
+    sorters: new[] { sorter },
+    facets: new[]
+    {
+        new KeywordFacet("author")
+    },
+    take: pageSize,
+    skip: (pageNumber - 1) * pageSize);
+						</script></code></pre>
+				</section>
+
+				<!-- Facets - rendering -->
+				<section>
+					<h2>Facets</h2>
+					<pre class="code-xs"><code class="language-csharp" data-trim><script type="text/template">
+foreach (var facet in result.Facets)
+{
+    <h2>@facet.FieldName.ToFirstUpperInvariant()</h2>
+
+    @foreach (var value in facet.Values)
+    {
+        if (value is not KeywordFacetValue keywordFacetValue) continue;
+
+        var author = await UmbracoContext.Content
+            .GetByIdAsync(Guid.Parse(keywordFacetValue.Key));
+
+        <p>
+            <input type="checkbox"
+                   id="author_@keywordFacetValue.Key"
+                   value="@keywordFacetValue.Key"
+                   name="@facet.FieldName" />
+            <label>@author.Name (@keywordFacetValue.Count)</label>
+        </p>
+    }
+}
+						</script></code></pre>
+				</section>
+
+				<!-- Protected content -->
+				<section>
+					<h2>Protected content</h2>
+					<pre class="code-sm"><code class="language-csharp" data-trim><script type="text/template">
+var result = await searcher.SearchAsync(
+    Constants.IndexAliases.PublishedContent,
+    accessContext: new AccessContext(memberKey, roleKeys.ToArray()));
+						</script></code></pre>
+				</section>
+
+				<!-- Section divider: Indexing -->
+				<section class="full-screen-slide" data-background-color="#8bb20d">
+					<h1>Indexing</h1>
+				</section>
+
+				<!-- Property value handlers -->
+				<section>
+					<h2>Property value handlers</h2>
+					<p class="text-sm">
+						Property value handlers tell the index how data from the property editor should be
+						indexed, similar to how a property value converter is used for rendering.
+					</p>
+					<p class="text-sm">
+						If a property editor does not have a property value handler, the property will not be
+						indexed.
+					</p>
+				</section>
+
+				<!-- Property value handler - code -->
+				<section>
+					<h2>Property value handler</h2>
+					<pre class="code-xs"><code class="language-csharp" data-trim><script type="text/template">
+internal class PlainStringPropertyValueHandler : IPropertyValueHandler
+{
+    public bool CanHandle(string propertyEditorAlias)
+        => propertyEditorAlias is Cms.Core.Constants.PropertyEditors.Aliases.TextBox
+            or Cms.Core.Constants.PropertyEditors.Aliases.TextArea
+            or Cms.Core.Constants.PropertyEditors.Aliases.PlainString;
+
+    public IEnumerable<IndexField> GetIndexFields(
+        IProperty property,
+        string? culture,
+        string? segment,
+        bool published,
+        IContentBase contentContext)
+        => property.GetValue(culture, segment, published) is string stringValue
+           && string.IsNullOrWhiteSpace(stringValue) is false
+            ? [new IndexField(
+                   property.Alias,
+                   new IndexValue { Texts = [stringValue] },
+                   culture,
+                   segment)]
+            : [];
+}
+						</script></code></pre>
+				</section>
+
+				<!-- Content indexers -->
+				<section>
+					<h2>Content indexers</h2>
+					<p class="text-sm">
+						When content changes, Umbraco Search gathers data for indexing using content indexers.
+					</p>
+					<p class="text-sm">Out of the box system fields and property values are indexed.</p>
+				</section>
+
+				<!-- Content indexers - code -->
+				<section>
+					<h2>Content indexers</h2>
+					<pre class="code-xs"><code class="language-csharp" data-trim><script type="text/template">
+internal class ArticleContentIndexer : IContentIndexer
+{
+    public Task<IEnumerable<IndexField>> GetIndexFieldsAsync(
+        IContentBase content,
+        string?[] cultures,
+        bool published,
+        CancellationToken cancellationToken)
+    {
+        if (published == false
+            || content.ContentType.Alias != Article.ModelTypeAlias)
+        {
+            return Task.FromResult(Enumerable.Empty<IndexField>());
+        }
+
+        var articleDate = content.GetValue<DateTime>("articleDate");
+
+        var yearField = new IndexField(
+            "articleYear",
+            new IndexValue { Integers = [articleDate.Year] }, null, null);
+
+        return Task.FromResult<IEnumerable<IndexField>>([yearField]);
+    }
+}
+						</script></code></pre>
+				</section>
+
+				<!-- Database cache -->
+				<section>
+					<h2>Database cache</h2>
+					<p class="text-sm">
+						All content index data gathered by the content indexers is cached in the database.
+						This allows for efficient index rebuilding when required.
+					</p>
+				</section>
+
+				<!-- Database cache - diagram -->
+				<section>
+					<h2>Database cache</h2>
+					<div class="diagram">
+						<svg viewBox="0 0 1080 400" role="img" aria-labelledby="cache-flow-desc">
+							<title id="cache-flow-desc">
+								How Umbraco Search uses the database cache. At startup without an index, a
+								populated cache means the index is rebuilt straight from the cache, otherwise
+								the content is re-indexed first. A save or publish updates the cache and the
+								index. A triggered rebuild reads the cache and rebuilds the index from it.
+							</title>
+
+							<defs>
+								<marker
+									id="arrow-cache"
+									viewBox="0 0 10 10"
+									refX="9"
+									refY="5"
+									markerWidth="7"
+									markerHeight="7"
+									orient="auto-start-reverse"
+								>
+									<path d="M 0 0 L 10 5 L 0 10 z" />
+								</marker>
+							</defs>
+
+							<!-- Triggers -->
+							<g class="node trigger">
+								<rect x="0" y="10" width="230" height="76" rx="10" />
+								<text x="115" y="42">Startup</text>
+								<text x="115" y="70" class="sub">no index yet</text>
+							</g>
+							<g class="node trigger">
+								<rect x="0" y="162" width="230" height="76" rx="10" />
+								<text x="115" y="194">Save / Publish</text>
+								<text x="115" y="222" class="sub">one node</text>
+							</g>
+							<g class="node trigger">
+								<rect x="0" y="314" width="230" height="76" rx="10" />
+								<text x="115" y="346">Rebuild</text>
+								<text x="115" y="374" class="sub">from the backoffice</text>
+							</g>
+
+							<!-- Actions -->
+							<g class="node action">
+								<rect x="330" y="10" width="300" height="76" rx="10" />
+								<text x="480" y="42">Cache populated?</text>
+								<text x="480" y="70" class="sub">if not, re-index content first</text>
+							</g>
+							<g class="node action">
+								<rect x="330" y="162" width="300" height="76" rx="10" />
+								<text x="480" y="194">Update cache</text>
+								<text x="480" y="222" class="sub">then update the index</text>
+							</g>
+							<g class="node action">
+								<rect x="330" y="314" width="300" height="76" rx="10" />
+								<text x="480" y="346">Read the cache</text>
+								<text x="480" y="374" class="sub">rebuild the index from it</text>
+							</g>
+
+							<!-- Trigger -> action -->
+							<path class="link arrowed-cache" d="M 230 48 H 322" />
+							<path class="link arrowed-cache" d="M 230 200 H 322" />
+							<path class="link arrowed-cache" d="M 230 352 H 322" />
+
+							<!-- Action -> cache -->
+							<path class="link arrowed-cache" d="M 630 48 H 700 V 150 H 762" />
+							<path class="link arrowed-cache" d="M 630 200 H 762" />
+							<path class="link arrowed-cache" d="M 630 352 H 700 V 250 H 762" />
+
+							<!-- Database cache -->
+							<g class="node store">
+								<path d="M 770 110 v 180 a 100 22 0 0 0 200 0 v -180 z" />
+								<ellipse cx="870" cy="110" rx="100" ry="22" />
+								<text x="870" y="195">Index cache</text>
+								<text x="870" y="223" class="sub">in the database</text>
+							</g>
+						</svg>
+					</div>
+				</section>
+
+				<!-- Updating the database cache -->
+				<section>
+					<h2>Update database cache</h2>
+					<ul class="text-md">
+						<li>Manually save affected content</li>
+						<li>Programmatically trigger an index refresh for affected content</li>
+						<li>Programmatically flush the index cache and rebuild</li>
+					</ul>
+				</section>
+
+				<!-- Shameless plug -->
+				<section>
+					<h2>Shameless plug</h2>
+					<div class="stack">
+						<img
+							src="img/package-marketplace.png"
+							alt="Umbraco Search Examine Reindex listing on the Umbraco Marketplace"
+						/>
+						<img
+							src="img/package-backoffice.png"
+							alt="The Reindex panel the package adds to the index details page in the backoffice"
+						/>
+					</div>
 				</section>
 			</div>
 		</div>

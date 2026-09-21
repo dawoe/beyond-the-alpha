@@ -114,11 +114,42 @@
 	max-height: none;
 }
 
-.reveal li code {
+.reveal pre.code-xs {
+	max-height: 540px;
+}
+
+.reveal pre.code-xs code {
+	font-size: 0.72rem;
+	line-height: 0.92rem;
+	max-height: none;
+}
+
+.reveal li code,
+.reveal p code {
 	font-size: 0.85em;
 	background: #f3f3ea;
 	padding: 0.05em 0.3em;
 	border-radius: 4px;
+}
+
+/* Stacked images -------------------------------------------- */
+
+.reveal .stack {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 24px;
+}
+
+.reveal .stack img {
+	display: block;
+	max-height: 215px;
+	width: auto;
+	max-width: 100%;
+	margin: 0;
+	border: none;
+	border-radius: 8px;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
 /* Diagrams --------------------------------------------------- */
@@ -181,6 +212,10 @@
 
 .reveal .diagram .link.arrowed {
 	marker-end: url(#arrow);
+}
+
+.reveal .diagram .link.arrowed-cache {
+	marker-end: url(#arrow-cache);
 }
 
 .reveal .diagram marker path {
